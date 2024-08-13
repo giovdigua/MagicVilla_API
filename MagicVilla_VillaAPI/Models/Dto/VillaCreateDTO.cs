@@ -2,7 +2,7 @@
 
 namespace MagicVilla_VillaAPI.Models.Dto
 {
-    public class VillaDTOCreate
+    public class VillaCreateDTO
     {
  
         [Required]
