@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
 using MagicVilla_VillaAPI.Repository.IRepository;
@@ -7,10 +8,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
-    [Route("api/VillaAPI")]
+    [Route("api/v{version:apiVersion}/VillaAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaAPIController : ControllerBase
     {
         protected APIResponse _response;
@@ -21,7 +23,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             _dbVilla = dbVilla;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
         }
 
         [HttpGet]

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
 using MagicVilla_VillaAPI.Repository.IRepository;
@@ -6,10 +7,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
-    [Route("api/VillaNumberAPI")]
+    [Route("api/v{version:apiVersion}/VillaNumberAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaNumberAPIController : ControllerBase
     {
         protected APIResponse _response;
@@ -17,12 +19,19 @@ namespace MagicVilla_VillaAPI.Controllers
         private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
 
-        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber,IVillaRepository dbVilla, IMapper mapper)
+        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IVillaRepository dbVilla, IMapper mapper)
         {
             _dbVillaNumber = dbVillaNumber;
             _dbVilla = dbVilla;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
+        }
+
+
+        [HttpGet("GetString")]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "Gio1", "Test1" };
         }
 
         [HttpGet]
@@ -31,7 +40,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             try
             {
-                IEnumerable<VillaNumber> villaNumberList = await _dbVillaNumber.GetAllAsync(includeProperties:"Villa");
+                IEnumerable<VillaNumber> villaNumberList = await _dbVillaNumber.GetAllAsync(includeProperties: "Villa");
                 _response.Result = _mapper.Map<List<VillaNumberDTO>>(villaNumberList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
@@ -44,6 +53,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
+
 
         [HttpGet("{id:int}", Name = "GetVillaNumber")]
         [ProducesResponseType(StatusCodes.Status200OK)]
